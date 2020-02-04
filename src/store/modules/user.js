@@ -40,39 +40,6 @@ const actions = {
             })
         })
     },
-    getList({commit}, formData) {
-        const {next_page, start_date, end_date, city_code,district_code, name} = formData
-        return new Promise((resolve, reject) => {
-            getList({page: next_page, name: name}).then(reponse => {
-                const { data }= reponse
-                resolve(data)
-            }).catch( error => {
-                reject(error)
-            })
-        })
-    },
-    getLogs({commit}, formData) {
-        const {page, id} = formData
-        return new Promise((resolve, reject) => {
-            getLogs({page: page, user_login: id}).then(reponse => {
-                const { data }= reponse
-                resolve(data)
-            }).catch( error => {
-                reject(error)
-            })
-        })
-    },
-    getRequest({}, formData) {
-        const {page, status, start_date, end_date} = formData
-        return new Promise((resolve, reject) => {
-            getRequest({page: page, status: status, start_date: start_date, end_date: end_date}).then(reponse => {
-                const { data }= reponse
-                resolve(data)
-            }).catch( error => {
-                reject(error)
-            })
-        })
-    },
     logout({}) {
         return new Promise((resolve, reject) => {
             logout().then(reponse => {
@@ -81,17 +48,6 @@ const actions = {
                 removeToken()
                 removeCurrentUser()
                 resolve()
-            }).catch( error => {
-                reject(error)
-            })
-        })
-    },
-    detailRequest({}, formData) {
-        const {id_request} = formData
-        return new Promise((resolve, reject) => {
-            detailRequest({id_request: id_request}).then(reponse => {
-                const { data }= reponse
-                resolve(data)
             }).catch( error => {
                 reject(error)
             })

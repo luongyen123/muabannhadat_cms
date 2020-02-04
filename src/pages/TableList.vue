@@ -3,7 +3,7 @@
       <div class="col-12">
         <card :title="table1.title" :subTitle="table1.subTitle">
           <div slot="raw-content" class="table-responsive">
-            <paper-table :data="table1.data" :columns="table1.columns">
+            <paper-table :data="table1.data" :columns="table1.columns" :columns_index="table1.colum_index">
 
             </paper-table>
           </div>
@@ -14,7 +14,7 @@
 </template>
 <script>
 import { PaperTable } from "@/components";
-const tableColumns = ["Id", "Name", "Salary", "Country", "City"];
+const tableColumns = ["Loại BDS", "Tỉnh/TP", "Quận/Huyện", "Phường Xã", "Tiêu đề","Tổng giá","Người đăng","Trạng thái"];
 const tableData = [
   {
     id: 1,
@@ -52,7 +52,9 @@ const tableData = [
     city: "Feldkirchen in Kärnten"
   }
 ];
-
+const colums_index = [
+  "type_bds", "city", "district", "address", "title", "price", "user","status"
+]
 export default {
   components: {
     PaperTable
@@ -60,12 +62,46 @@ export default {
   data() {
     return {
       table1: {
-        title: "Stripped Table",
-        subTitle: "Here is a subtitle for this table",
+        title: "",
+        subTitle: "",
         columns: [...tableColumns],
-        data: [...tableData]
+        colum_index: [...colums_index],
+        data: []
+      },
+      formData: {
+        type: 0,
+        type_bds: 0,
+        city_code: '0',
+        district_code: '0',
+        address_code: '0',
+        price_min: 0,
+        price_max: 0,
+        money: 0,
+        next_page: 1
       }
     };
+  },
+  created() {
+    this.fetch(1)
+  },
+  methods: {
+    async fetch(page) {
+      if (page) {
+        this.formData.next_page = page;
+      }
+      this.$store.dispatch('bds/getList', this.formData).then(reponse => {
+        this.data = reponse.datas;
+        this.totalPage = reponse.total_page;
+        this.pageActive = page === 1 ? 1 : page;
+      });
+    },
+    async fetch_locaion() {
+      this.$store
+        .dispatch("location/listCity", this.locationGet)
+        .then(reponse => {
+          this.dataLocation = reponse;
+        });
+    },
   }
 };
 </script>

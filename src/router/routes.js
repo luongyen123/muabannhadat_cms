@@ -15,12 +15,14 @@ const routes = [
       {
         path: "dashboard",
         name: "dashboard",
-        component: Dashboard
+        component: Dashboard,
+        meta: {permisions: 1}
       },
       {
         path: "table-list",
         name: "table-list",
-        component: TableList
+        component: TableList,
+        meta: {permisions: 1}
       }
     ]
   },

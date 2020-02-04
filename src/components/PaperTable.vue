@@ -8,9 +8,8 @@
     <tbody>
     <tr v-for="(item, index) in data" :key="index">
       <slot :row="item">
-        <td v-for="(column, index) in columns"
-            :key="index"
-            v-if="hasValue(item, column)">
+        <td v-for="(column, index) in columns_index"
+            :key="index">
           {{itemValue(item, column)}}
         </td>
       </slot>
@@ -23,6 +22,7 @@ export default {
   name: 'paper-table',
   props: {
     columns: Array,
+    columns_index: Array,
     data: Array,
     type: {
       type: String, // striped | hover
