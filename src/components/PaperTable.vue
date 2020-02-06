@@ -18,6 +18,7 @@
   </table>
 </template>
 <script>
+import  {formatTimeLog} from '../utils/dateFormat'
 export default {
   name: 'paper-table',
   props: {
@@ -47,7 +48,72 @@ export default {
       return item[column.toLowerCase()] !== "undefined";
     },
     itemValue(item, column) {
-      return item[column.toLowerCase()];
+       switch (column) {
+        case "city":
+        case "address":
+        case "district":
+          if ("district" in item || "city" in item || "address" in item ) {
+            return item[column].name;
+          } else {
+            return "";
+          }
+        case "price":
+          if(item['money'] === 1){
+            return item[column] + ' Tỷ';
+          } else {
+            return item[column] + ' Triệu';
+          }
+        case "user":
+          return item[column].name
+        case "created":
+          return formatTimeLog(item[column]);
+        case "status":
+          if(item[column] ==0){
+            return "Chưa phê duyệt"
+          } else {
+            return "Đã phê duyệt"
+          }
+        case "type_bds":
+          if (item[column] === 1) {
+            return "Căn hộ";
+          } else if(item[column] === 2){
+            return "Nhà";
+          }
+          else if(item[column] === 3){
+            return "Nhà phố";
+          }
+          else if(item[column] === 4){
+            return "Biệt thự";
+          }
+          else if(item[column] === 5){
+            return "Nhà riêng";
+          }
+          else if(item[column] === 6){
+            return "Đất nền";
+          }
+          else if(item[column] === 7){
+            return "Đất thổ cư";
+          }
+          else if(item[column] === 8){
+            return "Đất nông nghiệp";
+          }
+          else if(item[column] === 9){
+            return "Đất công nghiệp";
+          }
+          else if(item[column] === 10){
+            return "Mặt bằng";
+          }
+          else if(item[column] === 11){
+            return "Mặt bằng văn phòng";
+          }
+          else if(item[column] === 12){
+            return "Mặt bằng bán lẻ";
+          }else {
+            return "Kho xưởng";
+          }
+        default:
+          return item[column];
+      }
     }
   }
 };

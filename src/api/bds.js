@@ -7,3 +7,10 @@ export function getList(data) {
         data
     })
 }
+export function create(data) {
+    return request({
+        url: 'bds/create',
+        method: 'post',
+        data
+    })
+}
