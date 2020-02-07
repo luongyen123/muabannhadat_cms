@@ -12,6 +12,11 @@
             :key="index">
           {{itemValue(item, column)}}
         </td>
+        <td>
+          <button class="btn btn-success" title="Sửa tin" @click="update(index)"><span class="ti-pencil"></span></button>
+          <button class="btn btn-danger" title="Xóa tin"><span class="ti-trash"></span></button>
+          <button class="btn btn-primary" title="Unlock"><span class="ti-lock"></span></button>
+        </td>
       </slot>
     </tr>
     </tbody>
@@ -114,6 +119,9 @@ export default {
         default:
           return item[column];
       }
+    },
+    update(index) {
+      this.$emit('updateTin',index)
     }
   }
 };

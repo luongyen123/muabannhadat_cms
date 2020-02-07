@@ -9,7 +9,7 @@ export function login(data) {
 }
 export function getList(data) {
     return request({
-        url: 'admin/getUsers',
+        url: 'admin/getListUser',
         method: 'post',
         data
     })

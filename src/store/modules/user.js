@@ -1,4 +1,4 @@
-import {login} from '../../api/user'
+import {login, getList} from '../../api/user'
 import router from '../../router'
 import { getToken, getRole, setToken, setRole, setCurrentUser, removeRole, removeToken, removeCurrentUser } from '../../utils/auth'
 
@@ -48,6 +48,16 @@ const actions = {
                 removeToken()
                 removeCurrentUser()
                 resolve()
+            }).catch( error => {
+                reject(error)
+            })
+        })
+    },
+    getList({ commit}, ) {
+        return new Promise((resolve, reject) => {
+            getList().then(reponse => {
+                const { data }= reponse
+                resolve(data)
             }).catch( error => {
                 reject(error)
             })

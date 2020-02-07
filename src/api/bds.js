@@ -14,3 +14,10 @@ export function create(data) {
         data
     })
 }
+export function update(data) {
+    return request({
+        url: 'admin/updateTin',
+        method: 'post',
+        data
+    })
+}
