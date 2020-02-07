@@ -6,6 +6,7 @@ import NotFound from "@/pages/NotFoundPage.vue";
 import Dashboard from "@/pages/Dashboard.vue";
 import TableList from "@/pages/TableList.vue";
 import Login from "@/pages/Login.vue";
+import User from "@/pages/User.vue"
 const routes = [
   {
     path: "/",
@@ -22,6 +23,12 @@ const routes = [
         path: "table-list",
         name: "table-list",
         component: TableList,
+        meta: {permisions: 1}
+      },
+      {
+        path: "user-list",
+        name: "user-list",
+        component: User,
         meta: {permisions: 1}
       }
     ]

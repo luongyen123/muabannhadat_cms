@@ -4,6 +4,7 @@
       <template slot="links">
         <sidebar-link to="/dashboard" name="Trang chủ" icon="ti-panel"/>
         <sidebar-link to="/table-list" name="Quản lý tin mua bán" icon="ti-view-list-alt"/>
+        <sidebar-link to="/user-list" name="Quản lý tin người dùng" icon="ti-list-ol"/>
       </template>
       <mobile-menu>
         <li class="nav-item">
