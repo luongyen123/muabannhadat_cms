@@ -5,7 +5,7 @@ import { getToken } from '../utils/auth'
 
 let baseURL=""
 if (process.env.NODE_ENV === 'production') {
-    baseURL = 'http://api.daihuongland.com/ap'
+    baseURL = 'http://api.daihuongland.com/api'
 } else {
     baseURL= 'http://localhost:8000/api'
 }
