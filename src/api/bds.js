@@ -21,3 +21,10 @@ export function update(data) {
         data
     })
 }
+export function del(data) {
+    return request({
+        url: 'admin/delTin',
+        method: 'post',
+        data
+    })
+}

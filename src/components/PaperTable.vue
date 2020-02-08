@@ -13,9 +13,9 @@
           {{itemValue(item, column)}}
         </td>
         <td>
-          <button class="btn btn-success" title="Sửa tin" @click="update(index)"><span class="ti-pencil"></span></button>
-          <button class="btn btn-danger" title="Xóa tin"><span class="ti-trash"></span></button>
-          <button class="btn btn-primary" title="Unlock"><span class="ti-lock"></span></button>
+          <button class="btn btn-success" title="Sửa tin" @click="update(index,2)"><span class="ti-pencil"></span></button>
+          <button class="btn btn-danger" title="Xóa tin" @click="del(index)"><span class="ti-trash"></span></button>
+          <button class="btn btn-primary" title="Unlock" @click="update(index,item.status)"><span class="ti-lock"></span></button>
         </td>
       </slot>
     </tr>
@@ -73,7 +73,7 @@ export default {
         case "created":
           return formatTimeLog(item[column]);
         case "status":
-          if(item[column] ==0){
+          if(item[column] === 0 || item[column] === '0'){
             return "Chưa phê duyệt"
           } else {
             return "Đã phê duyệt"
@@ -120,8 +120,17 @@ export default {
           return item[column];
       }
     },
-    update(index) {
-      this.$emit('updateTin',index)
+    update(index, status) {
+      let data = {
+        index: index,
+        status: status
+      }
+      this.$emit('updateTin',data)
+    },
+    del(index) {
+      if(confirm('Bạn chắc chắn muốn xoá?')) {
+        this.$emit('delTin',index)
+      }
     }
   }
 };

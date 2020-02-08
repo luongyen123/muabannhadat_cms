@@ -226,7 +226,16 @@
             v-model="formData.number_tang"
           />
         </div>
-        <div class="col-8">
+        <div class="col-4">
+          <label>Tổng diện tích</label>
+          <input
+            class="form-control custom"
+            placeholder="TTổng diện tích"
+            type="text"
+            v-model="formData.sumS"
+          />
+        </div>
+        <div class="col-4">
           <label>Pháp lý</label>
           <select class="form-control custom" v-model="formData.type_bds">
             <option value="0">Pháp lý</option>
@@ -266,7 +275,7 @@
         v-on:click="addTin()"
         v-if="formData.id === 0"
       >Thêm</button>
-      <button type="submit" class="btn btn-primary" v-on:click="addTin()" v-else>Sửa tin</button>
+      <button type="submit" class="btn btn-primary" v-on:click="updateTinbds()" v-else>Sửa tin</button>
     </div>
     <div class="col-12">
       <card :title="table1.title" :subTitle="table1.subTitle">
@@ -274,15 +283,15 @@
         <div class="form-group row">
           <div class="col-4">
             <label>Lọc theo loại tin</label>
-            <select class="form-control custom" v-model="formData.type" v-on:change="fetch(1)">
+            <select class="form-control custom" v-model="formData.type">
               <option value="0">Chọn loại tin *</option>
               <option value="1">Tin Bán</option>
               <option value="2">Tin cho thuê</option>
             </select>
           </div>
-          <div class="col-4">
+          <div class="col-3">
             <label>Lọc theo loại BDS</label>
-            <select class="form-control custom" v-model="formData.type_bds" @change="fetch(1)">
+            <select class="form-control custom" v-model="formData.type_bds">
               <option value="0">Loại bất động sản *</option>
               <option
                 v-for="(type_bds,index) in colum_bds"
@@ -291,14 +300,20 @@
               >{{type_bds}}</option>
             </select>
           </div>
-          <div class="col-4">
+          <div class="col-2">
             <br />
             <b-button
               variant="primary"
-              v-on:click="reset"
+              v-on:click="fetch(1)"
               class="btn btn-primary"
               style="margin-left: 5px"
             >
+              <span class="ti-search"></span> Search
+            </b-button>
+          </div>
+          <div class="col-3">
+            <br />
+            <b-button variant="primary" v-on:click="reset" class="btn btn-danger">
               <span class="ti-reload"></span> Reset search
             </b-button>
           </div>
@@ -338,7 +353,6 @@
               class="form-control custom"
               v-model="formData.address_code"
               style="margin-bottom: 5px"
-              @change="fetch(1)"
             >
               <option value="0">Xã/Phường *</option>
               <option
@@ -360,12 +374,7 @@
           </div>
           <div class="col-4">
             <label>Đơn vị tiền tệ *</label>
-            <select
-              class="form-control custom"
-              v-model="formData.money"
-              style="margin-bottom: 5px"
-              @change="fetch(1)"
-            >
+            <select class="form-control custom" v-model="formData.money" style="margin-bottom: 5px">
               <option value="0">Đơn vị tiền tệ *</option>
               <option value="1">Tỷ</option>
               <option value="2">Triệu</option>
@@ -391,6 +400,7 @@
             :columns="table1.columns"
             :columns_index="table1.colum_index"
             @updateTin="editTin"
+            @delTin="delTin"
           ></paper-table>
         </div>
       </card>
@@ -498,6 +508,7 @@ export default {
         number_tang: 0,
         media: [],
         status: 0,
+        sumS: 0,
         next_page: 1
       },
       show: false,
@@ -525,6 +536,7 @@ export default {
         price: "",
         money: ""
       },
+      indexData: 0,
       data: [],
       totalPage: 0,
       pageActive: 1
@@ -552,35 +564,36 @@ export default {
     },
     addNew() {
       if (this.show && this.formData.id > 0) {
-        this.formData = {
-          id: 0,
-          type: 0,
-          type_bds: 0,
-          city_code: "0",
-          district_code: "0",
-          address_code: "0",
-          price_min: 0,
-          price_max: 0,
-          money: 0,
-          address_street: "",
-          address_number: "",
-          title: "",
-          description: "",
-          price: 0.0,
-          number_roomNgu: 0,
-          number_roomTam: 0,
-          rong: 0,
-          dai: 0,
-          huong: 0,
-          hem: 0,
-          number_tang: 0,
-          media: "",
-          next_page: 1
-        };
         this.urls = [];
+        this.images = [];
       } else {
         this.show = !this.show;
       }
+      this.formData = {
+        id: 0,
+        type: 0,
+        type_bds: 0,
+        city_code: "0",
+        district_code: "0",
+        address_code: "0",
+        price_min: 0,
+        price_max: 0,
+        money: 0,
+        address_street: "",
+        address_number: "",
+        title: "",
+        description: "",
+        price: 0.0,
+        number_roomNgu: 0,
+        number_roomTam: 0,
+        rong: 0,
+        dai: 0,
+        huong: 0,
+        hem: 0,
+        number_tang: 0,
+        media: [],
+        next_page: 1
+      };
     },
     async onFileChanged(e) {
       const files = e.target.files;
@@ -611,7 +624,7 @@ export default {
         await this.$store
           .dispatch("media/upload", this.formUpload)
           .then(response => {
-            this.formData.media.concat(response);
+            this.formData.media = this.formData.media.concat(response);
           });
       }
       let validate =
@@ -648,9 +661,70 @@ export default {
             huong: 0,
             hem: 0,
             number_tang: 0,
-            media: "",
+            media: [],
             next_page: 1
           };
+          this.images = [];
+          this.urls = [];
+          this.show = false;
+        });
+      }
+    },
+    async updateTinbds() {
+      this.checkType();
+      this.checkLoaiBDS();
+      this.checkLocation(1);
+      this.checkLocation(2);
+      this.checkLocation(3);
+      this.checkTitle(1);
+      this.checkTitle(2);
+      this.checkGia(1);
+      this.checkGia(2);
+      if (this.formUpload.image.length > 0) {
+        await this.$store
+          .dispatch("media/upload", this.formUpload)
+          .then(response => {
+            this.formData.media = this.formData.media.concat(response);
+          });
+      }
+      let validate =
+        this.formValidate.type === "" &&
+        this.formValidate.type_bds === "" &&
+        this.formValidate.city_code === "" &&
+        this.formValidate.district_code === "" &&
+        this.formValidate.address_code == "" &&
+        this.formValidate.title === "" &&
+        this.formValidate.description === "" &&
+        this.formValidate.price === "" &&
+        this.formValidate.money === "";
+      if (validate) {
+        this.$store.dispatch("bds/update", this.formData).then(response => {
+          this.data[this.indexData] = response;
+          this.formData = {
+            type: 0,
+            type_bds: 0,
+            city_code: "0",
+            district_code: "0",
+            address_code: "0",
+            price_min: 0,
+            price_max: 0,
+            money: 0,
+            address_street: "",
+            address_number: "",
+            title: "",
+            description: "",
+            price: 0.0,
+            number_roomNgu: 0,
+            number_roomTam: 0,
+            rong: 0,
+            dai: 0,
+            huong: 0,
+            hem: 0,
+            number_tang: 0,
+            media: [],
+            next_page: 1
+          };
+          this.images = [];
           this.urls = [];
           this.show = false;
         });
@@ -665,7 +739,7 @@ export default {
             this.districtData = response;
           });
       }
-      this.fetch(1);
+      // this.fetch(1);
     },
     getAddress() {
       this.checkLocation(2);
@@ -676,7 +750,7 @@ export default {
             this.addressData = response;
           });
       }
-      this.fetch(1);
+      // this.fetch(1);
     },
     checkType(e) {
       this.formValidate.type = "";
@@ -765,27 +839,77 @@ export default {
       };
       this.fetch(1);
     },
-    editTin(index) {
+    editTin(dataGet) {
+      let index = dataGet.index;
+      let status = dataGet.status;
       this.formData = this.data[index];
       this.formData.city_code = this.data[index].city.city_code;
-      if (this.formData.city_code != 0) {
-        this.$store
-          .dispatch("district/getDistrict", this.formData)
-          .then(response => {
-            this.districtData = response;
-          });
-      }
       this.formData.district_code = this.data[index].district.district_code;
-      if (this.formData.district_code != 0) {
-        this.$store
-          .dispatch("address/getAddress", this.formData)
-          .then(response => {
-            this.addressData = response;
-          });
-      }
       this.formData.address_code = this.data[index].address.address_code;
-      this.urls = this.data[index].media;
-      this.show = true;
+      
+      if (status != 2 || status != "2") {
+        if (status === 1 || status === "1") {
+          status = 0;
+        } else {
+          status = 1;
+        }
+        this.formData.status = status;
+        console.log(this.formData.status);
+        this.$store.dispatch("bds/update", this.formData).then(response => {
+          this.data[index] = response;
+          this.formData = {
+            type: 0,
+            type_bds: 0,
+            city_code: "0",
+            district_code: "0",
+            address_code: "0",
+            price_min: 0,
+            price_max: 0,
+            money: 0,
+            address_street: "",
+            address_number: "",
+            title: "",
+            description: "",
+            price: 0.0,
+            number_roomNgu: 0,
+            number_roomTam: 0,
+            rong: 0,
+            dai: 0,
+            huong: 0,
+            hem: 0,
+            number_tang: 0,
+            media: [],
+            next_page: 1
+          };
+          this.images = [];
+          this.urls = [];
+          this.show = false;
+        });
+      } else {
+        this.show = true;
+        this.indexData = index;
+        this.urls = this.data[index].media;
+        if (this.formData.city_code != 0) {
+          this.$store
+            .dispatch("district/getDistrict", this.formData)
+            .then(response => {
+              this.districtData = response;
+            });
+        }
+        if (this.formData.district_code != 0) {
+          this.$store
+            .dispatch("address/getAddress", this.formData)
+            .then(response => {
+              this.addressData = response;
+            });
+        }
+      }
+    },
+    delTin(index) {
+      let formDel = this.data[index];
+      this.$store.dispatch("bds/del", formDel).then(response => {
+        this.data.splice(index, 1);
+      });
     },
     xoaanh(index) {
       let url_image = this.urls[index];

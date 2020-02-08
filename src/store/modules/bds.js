@@ -1,4 +1,4 @@
-import {getList, create, update} from '../../api/bds'
+import {getList, create, update, del} from '../../api/bds'
 
 const state = {
 }
@@ -31,9 +31,10 @@ const actions = {
         })
     },
     create({commit},formData) {
-        let { status,address_code, address_number,address_street, city_code,dai, description, district_code, hem, huong, media,money,number_roomNgu,number_roomTam,number_tang,price,rong,title,type,type_bds} = formData
+        console.log(formData)
+        let {sumS,status,address_code, address_number,address_street, city_code,dai, description, district_code, hem, huong, media,money,number_roomNgu,number_roomTam,number_tang,price,rong,title,type,type_bds} = formData
         return new Promise((resolve, reject) => {
-            create({status: status,address_code: address_code, address_number:address_number, 
+            create({sumS: sumS,status: status,address_code: address_code, address_number:address_number, 
                 address_street: address_street,city_code: city_code, dai: dai, description: description,
                 district_code: district_code, hem: hem, huong: huong, media: JSON.stringify(media), money: money,number_roomNgu: number_roomNgu, number_roomTam: number_roomTam, 
                 number_tang: number_tang, price: price, rong: rong, title: title, type: type, type_bds: type_bds
@@ -60,6 +61,17 @@ const actions = {
             })
         })
     },
+    del({commit},formData) {
+        let { id} = formData
+        return new Promise((resolve, reject) => {
+            del({id: id}).then(reponse => {
+                const { data }= reponse
+                resolve(data)
+            }).catch( error => {
+                reject(error)
+            })
+        })
+    }
 }
 export default {
     namespaced: true,
