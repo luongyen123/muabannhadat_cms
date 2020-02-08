@@ -611,7 +611,7 @@ export default {
         await this.$store
           .dispatch("media/upload", this.formUpload)
           .then(response => {
-            this.formData.media.push(response);
+            this.formData.media.concat(response);
           });
       }
       let validate =
