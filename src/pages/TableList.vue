@@ -254,7 +254,7 @@
             type="file"
             class="custom-file-input"
             id="inputGroupFile04"
-            @change="onFileChanged"
+            @change="onFileChanged($event)"
             multiple
           />
           <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
@@ -548,6 +548,7 @@ export default {
   },
   methods: {
     async fetch(page) {
+      // console.log("fetch")
       if (page) {
         this.formData.next_page = page;
       }
@@ -558,11 +559,13 @@ export default {
       });
     },
     async fetch_locaion() {
+      // console.log("fetch location")
       this.$store.dispatch("city/getCity", this.locationGet).then(reponse => {
         this.cityData = reponse;
       });
     },
     addNew() {
+      // console.log("ADD NEW")
       if (this.show && this.formData.id > 0) {
         this.urls = [];
         this.images = [];
@@ -596,6 +599,11 @@ export default {
       };
     },
     async onFileChanged(e) {
+      // console.log("onFileChanged")
+      if (this.formData.id === 0) {
+        this.urls = [];
+      }
+      this.images = [];
       const files = e.target.files;
       if (files.length > 0) {
         for (let i = 0; i < files.length; i++) {
@@ -609,8 +617,11 @@ export default {
           };
         }
       }
+      this.formData.media =  this.formData.media.filter(x => !this.images.includes(x))
+      // console.log(this.formData.media)
     },
     async addTin() {
+      // console.log("addTin")
       this.checkType();
       this.checkLoaiBDS();
       this.checkLocation(1);
@@ -627,6 +638,7 @@ export default {
             this.formData.media = this.formData.media.concat(response);
           });
       }
+      this.formData.media = Array.from(new Set(this.formData.media))
       let validate =
         this.formValidate.type === "" &&
         this.formValidate.type_bds === "" &&
@@ -671,6 +683,7 @@ export default {
       }
     },
     async updateTinbds() {
+      // console.log("addTin")
       this.checkType();
       this.checkLoaiBDS();
       this.checkLocation(1);
@@ -687,6 +700,7 @@ export default {
             this.formData.media = this.formData.media.concat(response);
           });
       }
+      this.formData.media = Array.from(new Set(this.formData.media))
       let validate =
         this.formValidate.type === "" &&
         this.formValidate.type_bds === "" &&
@@ -846,7 +860,7 @@ export default {
       this.formData.city_code = this.data[index].city.city_code;
       this.formData.district_code = this.data[index].district.district_code;
       this.formData.address_code = this.data[index].address.address_code;
-      
+
       if (status != 2 || status != "2") {
         if (status === 1 || status === "1") {
           status = 0;
@@ -854,7 +868,6 @@ export default {
           status = 1;
         }
         this.formData.status = status;
-        console.log(this.formData.status);
         this.$store.dispatch("bds/update", this.formData).then(response => {
           this.data[index] = response;
           this.formData = {
