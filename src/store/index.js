@@ -6,6 +6,7 @@ import media from './modules/media'
 import city from './modules/city'
 import district from './modules/district'
 import address from './modules/address'
+import tintuc from './modules/tintuc'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -15,6 +16,7 @@ export default new Vuex.Store({
         media: media,
         city: city,
         district: district,
-        address: address
+        address: address,
+        tintuc: tintuc
     }
 })
