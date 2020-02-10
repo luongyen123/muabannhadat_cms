@@ -118,14 +118,15 @@
         <div class="col-12">
           <label>Mô tả chi tiết*</label>
           />
-          <textarea
+          <!-- <textarea
             class="form-control"
             placeholder="Mô tả chi tiết"
             type="text"
             id="custom1"
             v-model="formData.description"
             v-on:keyup="checkTitle(2)"
-          ></textarea>
+          ></textarea> -->
+          <ckeditor :editor="editor" v-model="formData.description" :config="editorConfig" v-on:keyup="checkTitle(2)"></ckeditor>
           <span v-if="formValidate.description" class="error">{{formValidate.description}}</span>
         </div>
       </div>
@@ -409,6 +410,7 @@
 </template>
 <script>
 import { PaperTable } from "@/components";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 const tableColumns = [
   "Loại BDS",
   "Tỉnh/TP",
@@ -473,7 +475,8 @@ const phaply_colums = {
 };
 export default {
   components: {
-    PaperTable
+    PaperTable,
+    ClassicEditor
   },
   data() {
     return {
@@ -484,6 +487,19 @@ export default {
         colum_index: [...colums_index],
         data: []
       },
+      editorConfig: {
+        toolbar: [
+          "heading",
+          "|",
+          "bold",
+          "italic",
+          "link",
+          "bulletedList",
+          "numberedList",
+          "blockQuote"
+        ]
+      },
+      editor: ClassicEditor,
       formData: {
         id: 0,
         type: 0,
