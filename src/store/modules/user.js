@@ -53,9 +53,10 @@ const actions = {
             })
         })
     },
-    getList({ commit}, ) {
+    getList({ commit}, formData) {
+        const {page} = formData
         return new Promise((resolve, reject) => {
-            getList().then(reponse => {
+            getList({page: page}).then(reponse => {
                 const { data }= reponse
                 resolve(data)
             }).catch( error => {

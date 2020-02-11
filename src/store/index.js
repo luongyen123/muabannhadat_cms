@@ -7,6 +7,7 @@ import city from './modules/city'
 import district from './modules/district'
 import address from './modules/address'
 import tintuc from './modules/tintuc'
+import form from "./modules/form"
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -17,6 +18,7 @@ export default new Vuex.Store({
         city: city,
         district: district,
         address: address,
-        tintuc: tintuc
+        tintuc: tintuc,
+        form: form
     }
 })

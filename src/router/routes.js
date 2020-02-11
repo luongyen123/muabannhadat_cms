@@ -7,6 +7,8 @@ import Dashboard from "@/pages/Dashboard.vue";
 import TableList from "@/pages/TableList.vue";
 import Login from "@/pages/Login.vue";
 import User from "@/pages/User.vue"
+import FormRegister from "@/pages/FormRegister.vue"
+
 const routes = [
   {
     path: "/",
@@ -29,6 +31,12 @@ const routes = [
         path: "user-list",
         name: "user-list",
         component: User,
+        meta: {permisions: 1}
+      },
+      {
+        path: "form-register",
+        name: "formregister",
+        component: FormRegister,
         meta: {permisions: 1}
       }
     ]
