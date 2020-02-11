@@ -65,6 +65,7 @@
             <slot :row="item">
               <td v-for="(column, index) in columns_index" :key="index">{{itemValue(item, column)}}</td>
               <td>
+                <a class="btn btn-info"  target="_blank" title="Xem tin" v-bind:href="href + item.slug" ><span class="ti-eye"></span></a>
                 <button class="btn btn-success" title="Sửa tin" @click="update(index)">
                   <span class="ti-pencil"></span>
                 </button>
@@ -120,7 +121,8 @@ export default {
       buttonTitle: "Thêm bài",
       columns_index: columns_index,
       columns: columns,
-      index: 0
+      index: 0,
+      href:"http://localhost:8081/tin-tuc/"
     };
   },
   created() {

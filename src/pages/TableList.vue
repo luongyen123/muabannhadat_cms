@@ -118,14 +118,6 @@
         <div class="col-12">
           <label>Mô tả chi tiết*</label>
           />
-          <!-- <textarea
-            class="form-control"
-            placeholder="Mô tả chi tiết"
-            type="text"
-            id="custom1"
-            v-model="formData.description"
-            v-on:keyup="checkTitle(2)"
-          ></textarea> -->
           <ckeditor :editor="editor" v-model="formData.description" :config="editorConfig" v-on:keyup="checkTitle(2)"></ckeditor>
           <span v-if="formValidate.description" class="error">{{formValidate.description}}</span>
         </div>

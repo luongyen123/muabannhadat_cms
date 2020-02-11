@@ -13,6 +13,7 @@
           {{itemValue(item, column)}}
         </td>
         <td>
+          <a class="btn btn-info"  target="_blank" title="Xem tin" v-bind:href="href + item.slug" ><span class="ti-eye"></span></a>
           <button class="btn btn-success" title="Sửa tin" @click="update(index,2)"><span class="ti-pencil"></span></button>
           <button class="btn btn-danger" title="Xóa tin" @click="del(index)"><span class="ti-trash"></span></button>
           <button class="btn btn-primary" title="Unlock" @click="update(index,item.status)"><span class="ti-lock"></span></button>
@@ -26,6 +27,11 @@
 import  {formatTimeLog} from '../utils/dateFormat'
 export default {
   name: 'paper-table',
+  data() {
+    return {
+      href:"http://localhost:8081/tin-mua-ban-bds/"
+    }
+  },
   props: {
     columns: Array,
     columns_index: Array,
