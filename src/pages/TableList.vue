@@ -118,7 +118,12 @@
         <div class="col-12">
           <label>Mô tả chi tiết*</label>
           />
-          <ckeditor :editor="editor" v-model="formData.description" :config="editorConfig" v-on:keyup="checkTitle(2)"></ckeditor>
+          <ckeditor
+            :editor="editor"
+            v-model="formData.description"
+            :config="editorConfig"
+            v-on:keyup="checkTitle(2)"
+          ></ckeditor>
           <span v-if="formValidate.description" class="error">{{formValidate.description}}</span>
         </div>
       </div>
@@ -395,6 +400,20 @@
             @updateTin="editTin"
             @delTin="delTin"
           ></paper-table>
+          <paginate
+            v-model="currentPage"
+            :page-count="totalPage"
+            :click-handler="fetch"
+            :prev-text="'Prev'"
+            :next-text="'Next'"
+            :container-class="'pagination'"
+            :page-class="'page-item'"
+            :page-link-class="'page-link'"
+            :prev-class="'page-item'"
+            :prev-link-class="'page-link'"
+            :next-class="'page-item'"
+            :next-link-class="'page-link'"
+          ></paginate>
         </div>
       </card>
     </div>
@@ -403,6 +422,7 @@
 <script>
 import { PaperTable } from "@/components";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import Paginate from "vuejs-paginate";
 const tableColumns = [
   "Loại BDS",
   "Tỉnh/TP",
@@ -468,7 +488,8 @@ const phaply_colums = {
 export default {
   components: {
     PaperTable,
-    ClassicEditor
+    ClassicEditor,
+    Paginate
   },
   data() {
     return {
@@ -547,23 +568,20 @@ export default {
       indexData: 0,
       data: [],
       totalPage: 0,
-      pageActive: 1
+      currentPage: 1
     };
   },
   created() {
-    this.fetch(1);
-    this.fetch_locaion();
+    this.fetch();
+    this.fetch_locaion(1);
   },
   methods: {
-    async fetch(page) {
+    async fetch() {
       // console.log("fetch")
-      if (page) {
-        this.formData.next_page = page;
-      }
+      this.formData.next_page = this.currentPage;
       this.$store.dispatch("bds/getList", this.formData).then(reponse => {
         this.data = reponse.datas;
         this.totalPage = reponse.total_page;
-        this.pageActive = page === 1 ? 1 : page;
       });
     },
     async fetch_locaion() {
@@ -625,7 +643,9 @@ export default {
           };
         }
       }
-      this.formData.media =  this.formData.media.filter(x => !this.images.includes(x))
+      this.formData.media = this.formData.media.filter(
+        x => !this.images.includes(x)
+      );
       // console.log(this.formData.media)
     },
     async addTin() {
@@ -646,7 +666,7 @@ export default {
             this.formData.media = this.formData.media.concat(response);
           });
       }
-      this.formData.media = Array.from(new Set(this.formData.media))
+      this.formData.media = Array.from(new Set(this.formData.media));
       let validate =
         this.formValidate.type === "" &&
         this.formValidate.type_bds === "" &&
@@ -708,7 +728,7 @@ export default {
             this.formData.media = this.formData.media.concat(response);
           });
       }
-      this.formData.media = Array.from(new Set(this.formData.media))
+      this.formData.media = Array.from(new Set(this.formData.media));
       let validate =
         this.formValidate.type === "" &&
         this.formValidate.type_bds === "" &&

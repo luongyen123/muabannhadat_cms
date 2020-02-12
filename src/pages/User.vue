@@ -65,7 +65,14 @@
             <slot :row="item">
               <td v-for="(column, index) in columns_index" :key="index">{{itemValue(item, column)}}</td>
               <td>
-                <a class="btn btn-info"  target="_blank" title="Xem tin" v-bind:href="href + item.slug" ><span class="ti-eye"></span></a>
+                <a
+                  class="btn btn-info"
+                  target="_blank"
+                  title="Xem tin"
+                  v-bind:href="href + item.slug"
+                >
+                  <span class="ti-eye"></span>
+                </a>
                 <button class="btn btn-success" title="Sửa tin" @click="update(index)">
                   <span class="ti-pencil"></span>
                 </button>
@@ -77,6 +84,20 @@
           </tr>
         </tbody>
       </table>
+      <paginate
+        v-model="currentPage"
+        :page-count="totalPage"
+        :click-handler="getTin"
+        :prev-text="'Prev'"
+        :next-text="'Next'"
+        :container-class="'pagination'"
+        :page-class="'page-item'"
+        :page-link-class="'page-link'"
+        :prev-class="'page-item'"
+        :prev-link-class="'page-link'"
+        :next-class="'page-item'"
+        :next-link-class="'page-link'"
+      ></paginate>
     </div>
   </div>
 </template>
@@ -84,12 +105,13 @@
 <script>
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { formatTimeLog } from "@/utils/dateFormat";
+import Paginate from "vuejs-paginate";
 
 const columns_index = ["title", "user", "created"];
 const columns = ["Tiêu đề", "Nguời đăng", "Ngày đăng", "Hành động"];
 export default {
   name: "user",
-  components: {},
+  components: { Paginate },
   data() {
     return {
       editor: ClassicEditor,
@@ -122,7 +144,9 @@ export default {
       columns_index: columns_index,
       columns: columns,
       index: 0,
-      href:"http://localhost:8081/tin-tuc/"
+      href: "http://localhost:8081/tin-tuc/",
+      totalPage: 1,
+      currentPage: 1
     };
   },
   created() {
@@ -198,9 +222,11 @@ export default {
       this.index = 0;
     },
     async getTin() {
-      this.$store.dispatch("tintuc/getList", {}).then(response => {
-        this.datas = response.datas;
-      });
+      this.$store
+        .dispatch("tintuc/getList", { page: this.currentPage })
+        .then(response => {
+          this.datas = response.datas;
+        });
     },
     itemValue(item, column) {
       switch (column) {
@@ -224,7 +250,7 @@ export default {
     },
     del(index) {
       if (confirm("Bạn chắc chắn muốn xoá?")) {
-        this.formData.id = this.datas[index].id
+        this.formData.id = this.datas[index].id;
         this.$store.dispatch("tintuc/del", this.formData).then(response => {
           this.datas.splice(index, 1);
         });

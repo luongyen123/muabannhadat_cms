@@ -15,15 +15,33 @@
         </tr>
       </tbody>
     </table>
+    <paginate
+      v-model="currentPage"
+      :page-count="totalPage"
+      :click-handler="getList"
+      :prev-text="'Prev'"
+      :next-text="'Next'"
+      :container-class="'pagination'"
+      :page-class="'page-item'"
+      :page-link-class="'page-link'"
+      :prev-class="'page-item'"
+      :prev-link-class="'page-link'"
+      :next-class="'page-item'"
+      :next-link-class="'page-link'"
+    ></paginate>
   </div>
 </template>
 
 <script>
 import { formatTimeLog } from "@/utils/dateFormat";
+import Paginate from "vuejs-paginate";
 const columns = ["Họ tên", "Email", "Số điện thoại", "Nội dung", "Thời gian"];
 const columns_index = ["name", "email", "phone", "content", "created"];
 export default {
   name: "FormRegister",
+  components: {
+    Paginate
+  },
   data() {
     return {
       columns: columns,
@@ -34,15 +52,16 @@ export default {
     };
   },
   created() {
-    this.getList(1);
+    this.getList();
   },
   methods: {
-    async getList(page) {
-      this.currentPage = page;
-      this.$store.dispatch("form/getList", { page: page }).then(response => {
-        this.datas = response.datas;
-        this.totalPage = response.total_page;
-      });
+    async getList() {
+      this.$store
+        .dispatch("form/getList", { page: this.currentPage })
+        .then(response => {
+          this.datas = response.datas;
+          this.totalPage = response.total_page;
+        });
     },
     itemValue(item, column) {
       if (column === "created") {
