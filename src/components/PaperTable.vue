@@ -29,7 +29,7 @@ export default {
   name: 'paper-table',
   data() {
     return {
-      href:"http://localhost:8081/tin-mua-ban-bds/"
+      href:"http://daihuongland.com/tin-mua-ban-bds/"
     }
   },
   props: {
