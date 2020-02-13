@@ -247,6 +247,7 @@ export default {
       this.formData.id = item.id;
       this.formData.title = item.title;
       this.formData.description = item.description;
+      window.scroll(0,0)
     },
     del(index) {
       if (confirm("Bạn chắc chắn muốn xoá?")) {
