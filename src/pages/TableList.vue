@@ -944,6 +944,7 @@ export default {
               this.addressData = response;
             });
         }
+        window.scroll(0,0)
       }
     },
     delTin(index) {
